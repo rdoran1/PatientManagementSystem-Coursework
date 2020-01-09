@@ -5,8 +5,6 @@
  */
 package GUI;
 
-import Model.Patient;
-import Model.User;
 
 /**
  *
@@ -211,8 +209,6 @@ public class NewAccount extends javax.swing.JFrame {
         Age = AgeField.getText();
         Password = PasswordField.getText();
         Sex = (String)SexBox.getSelectedItem();
-        User input = new Patient(Name, Surname, Sex, Age, Address, Password);
-        System.out.println(input);
         NameField.setText(null);
         LastNameField.setText(null);
         AgeField.setText(null);

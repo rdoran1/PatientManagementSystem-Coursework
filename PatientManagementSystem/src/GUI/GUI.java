@@ -5,19 +5,52 @@
  */
 package GUI;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author rdoran1
  */
 public class GUI extends javax.swing.JFrame {
 
+    
     /**
      * Creates new form GUI
      */
     public GUI() {
         initComponents();
+        Data();
     }
-
+    public static void Data(){
+        String UserFilePath = "Users.txt";
+        File UsersFile = new File(UserFilePath);
+        
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(UsersFile));
+            String firstLine = br.readLine().trim();
+            String[] columnName = firstLine.split(",");
+            
+            Object[] UserTableLines = br.lines().toArray();
+            
+            for(int i = 0; i < UserTableLines.length; i++){
+            String line = UserTableLines[i].toString().trim();
+            String[] dataRow = line.split("/");
+            
+            System.out.println(Arrays.deepToString(UserTableLines));
+            }
+            
+            
+        } catch(Exception ex){
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,7 +74,7 @@ public class GUI extends javax.swing.JFrame {
         LoginLabel.setText("Login");
 
         UsernameLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        UsernameLabel.setText("Username:");
+        UsernameLabel.setText("ID:");
 
         PasswordLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         PasswordLabel.setText("Password:");
@@ -79,13 +112,13 @@ public class GUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(UsernameLabel)
-                                .addGap(28, 28, 28)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(UsernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(PasswordLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(PasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(138, Short.MAX_VALUE))
+                        .addContainerGap(165, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(CreateAccountButton, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
