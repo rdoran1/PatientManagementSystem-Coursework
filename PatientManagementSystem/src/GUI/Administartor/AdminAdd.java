@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GUI;
+package GUI.Administartor;
 
+import GUI.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author rdoran1
  */
-public class NewAccount extends javax.swing.JFrame {
+public class AdminAdd extends javax.swing.JFrame {
 
     public String Name;
     public String Surname;
@@ -25,10 +25,12 @@ public class NewAccount extends javax.swing.JFrame {
     public String Age;
     public String Address;
     public String Password;
+    public String UserType;
+    public String IDType;
     /**
      * Creates new form NewAccount
      */
-    public NewAccount() {
+    public AdminAdd() {
         initComponents();
     }
 
@@ -55,6 +57,8 @@ public class NewAccount extends javax.swing.JFrame {
         LastNameField = new javax.swing.JTextField();
         PasswordLabel = new javax.swing.JLabel();
         PasswordField = new javax.swing.JTextField();
+        UserTypeField = new javax.swing.JLabel();
+        UserTypeMenu = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,6 +129,12 @@ public class NewAccount extends javax.swing.JFrame {
             }
         });
 
+        UserTypeField.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        UserTypeField.setText("User Type:");
+
+        UserTypeMenu.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        UserTypeMenu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Secretary", "Doctor" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -155,17 +165,21 @@ public class NewAccount extends javax.swing.JFrame {
                             .addComponent(TitleField))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(CreateAccountButton)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
                                     .addComponent(PasswordLabel)
                                     .addGap(18, 18, 18)
-                                    .addComponent(PasswordField)))
+                                    .addComponent(PasswordField))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(AddressLabel)
+                                    .addGap(30, 30, 30)
+                                    .addComponent(AddressField, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(CreateAccountButton)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(AddressLabel)
-                                .addGap(30, 30, 30)
-                                .addComponent(AddressField, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(UserTypeField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(UserTypeMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -198,8 +212,12 @@ public class NewAccount extends javax.swing.JFrame {
                     .addComponent(PasswordLabel)
                     .addComponent(PasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(UserTypeField)
+                    .addComponent(UserTypeMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                 .addComponent(CreateAccountButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -217,28 +235,40 @@ public class NewAccount extends javax.swing.JFrame {
         Password = PasswordField.getText();
         Sex = (String)SexBox.getSelectedItem();
         Address = AddressField.getText();
+        UserType = (String)UserTypeMenu.getSelectedItem();
+        IDType = null;
         
         int[] IDNumbers = new int[1];
         for(int i = 0; i < IDNumbers.length; i++)
         {
-            IDNumbers[i] = (int)(Math.random()*9999+1);
+            IDNumbers[i] = (int)(Math.random() * 9999 + 1);
         }
         
         String IDNumber = Integer.toString(IDNumbers[0]);
         
-        try 
+        if("Secretary".equals(UserType))
         {
-            BufferedWriter buffer = new BufferedWriter(new FileWriter("NewUser.txt", true));
-            buffer.newLine();
-            buffer.write("Patient" + " / " + "P" + IDNumber + " / " + Name + " / " + Surname + " / " + Age + " / " + Sex + " / " + Address + " / " + Password);
-            buffer.close();
-        } catch (IOException ex) {
-            Logger.getLogger(NewAccount.class.getName()).log(Level.SEVERE, null, ex);
+            IDType = "S";
+        }
+        if("Doctor".equals(UserType)){
+            IDType = "D";
         }
         
-        setVisible(false);
-        new GUI().setVisible(true);
         
+        
+        try {
+            BufferedWriter buffer = new BufferedWriter(new FileWriter("Users.txt", true));
+            buffer.write(UserType + " / " + IDType + IDNumber + " / " + Name + " / " + Surname + " / " + Age + " / " + Sex + " / " + Address + " / " + Password);
+            buffer.newLine();
+            buffer.close();
+            } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(AdminAdd.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.setVisible(false);
+        new AdminAccounts().setVisible(true);
     }//GEN-LAST:event_CreateAccountButtonActionPerformed
 
     
@@ -281,20 +311,21 @@ public class NewAccount extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewAccount.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminAdd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewAccount.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminAdd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewAccount.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminAdd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewAccount.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminAdd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewAccount().setVisible(true);
+                new AdminAdd().setVisible(true);
             }
         });
     }
@@ -313,6 +344,8 @@ public class NewAccount extends javax.swing.JFrame {
     private javax.swing.JLabel PasswordLabel;
     private javax.swing.JComboBox<String> SexBox;
     private javax.swing.JLabel TitleField;
+    private javax.swing.JLabel UserTypeField;
+    private javax.swing.JComboBox<String> UserTypeMenu;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

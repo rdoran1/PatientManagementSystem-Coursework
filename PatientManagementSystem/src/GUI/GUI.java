@@ -5,6 +5,10 @@
  */
 package GUI;
 
+import GUI.Administartor.AdministratorHomepage;
+import GUI.Doctor.DoctorHomepage;
+import GUI.Secretary.SecretaryHomepage;
+import GUI.Patient.PatientHomepage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -19,38 +23,43 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUI extends javax.swing.JFrame {
 
-    
+    String UserFilePath = "Users.txt";
+    File UsersFile = new File(UserFilePath);
+    String userType = null;
     /**
      * Creates new form GUI
      */
     public GUI() {
         initComponents();
-        Data();
     }
-    public static void Data(){
-        String UserFilePath = "Users.txt";
-        File UsersFile = new File(UserFilePath);
+    
+    public Boolean CheckIdAndPassword(String id, String password){
         
         try{
             BufferedReader br = new BufferedReader(new FileReader(UsersFile));
-            String firstLine = br.readLine().trim();
-            String[] columnName = firstLine.split(",");
-            
             Object[] UserTableLines = br.lines().toArray();
             
             for(int i = 0; i < UserTableLines.length; i++){
-            String line = UserTableLines[i].toString().trim();
-            String[] dataRow = line.split("/");
+                String line = UserTableLines[i].toString().trim();
+                String[] dataRow = line.split(" / ");
+                for(int j = 0;j < dataRow.length; j++){
+                    if(dataRow[j].equals(id) && dataRow[j + 6].equals(password)){
+                        userType = dataRow[0];
+                        return true;
+                    }
+            }
+            }
             
             System.out.println(Arrays.deepToString(UserTableLines));
-            }
             
             
         } catch(Exception ex){
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
-          
+       return false;   
     }
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -118,18 +127,21 @@ public class GUI extends javax.swing.JFrame {
                                 .addComponent(PasswordLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(PasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(165, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(CreateAccountButton, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                            .addComponent(LoginLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LoginButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(LoginLabel)
                         .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(CreateAccountButton, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LoginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addContainerGap()
                 .addComponent(LoginLabel)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -161,7 +173,34 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_CreateAccountButtonActionPerformed
 
     private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginButtonActionPerformed
-        // TODO add your handling code here:
+
+        CheckIdAndPassword(UsernameField.getText(),PasswordField.getText());
+        
+        if("Patient".equals(userType))
+        {
+            setVisible(false);
+            PatientHomepage patient = new PatientHomepage();
+            patient.setId(UsernameField.getText());
+            patient.setVisible(true);
+        }
+        else if("Administrator".equals(userType))
+        {
+            setVisible(false);
+            AdministratorHomepage admin = new AdministratorHomepage();
+            admin.setVisible(true);
+        }
+        else if("Secretary".equals(userType))
+        {
+            setVisible(false);
+            SecretaryHomepage secretary = new SecretaryHomepage();
+            secretary.setVisible(true);
+        }
+        else if("Docter".equals(userType))
+        {
+            setVisible(false);
+            DoctorHomepage doctor = new DoctorHomepage();
+            doctor.setVisible(true);
+        }
     }//GEN-LAST:event_LoginButtonActionPerformed
 
     /**
