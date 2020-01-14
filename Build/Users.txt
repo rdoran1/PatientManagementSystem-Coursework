@@ -1,0 +1,5 @@
+User Type , ID , First Name , Last Name , Age , Sex , Address , Password
+Administrator / A0001 / Ross / Doran / 22 / Male / 29 Lipson Road / password1
+Patient / P0001 / Sam / Rowsell-Mitchell / 21 / Male / 1 Beaumont Road / password1
+Secretary / S0001 / Dom / Sleightholme / 21 / Male / 2 Weird Street / password1
+Docter / D0001 / Doug / Ross / 58 / Male / 3 ER Lane / password1
